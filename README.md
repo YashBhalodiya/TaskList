@@ -15,6 +15,7 @@ A simple ToDo app built with Flutter that lets users add, update, and delete tas
 
 ```bash
 git clone https://github.com/YashBhalodiya/ToDo-App.git
+```
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
