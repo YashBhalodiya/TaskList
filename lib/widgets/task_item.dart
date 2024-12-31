@@ -5,13 +5,14 @@ class TaskItem extends StatelessWidget {
   final Task task;
   final VoidCallback onToggleComplete;
   final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
-  const TaskItem({
-    super.key,
-    required this.task,
-    required this.onToggleComplete,
-    required this.onDelete,
-  });
+  const TaskItem(
+      {super.key,
+      required this.task,
+      required this.onToggleComplete,
+      required this.onDelete,
+      required this.onEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +46,7 @@ class TaskItem extends StatelessWidget {
             ),
             onPressed: onToggleComplete,
           ),
+          onTap: onEdit,
         ),
       ),
     );

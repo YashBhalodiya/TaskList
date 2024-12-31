@@ -12,7 +12,6 @@ class EditTaskScreen extends StatefulWidget {
 
 class _EditTaskScreenState extends State<EditTaskScreen> {
   late TextEditingController titleController;
-  late TextEditingController descriptionController;
 
   @override
   void initState() {
@@ -43,7 +42,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                   setState(() {
                     widget.task.title = titleController.text;
                   });
-                  Navigator.pop(context);
+                  Navigator.pop(context, titleController.text);
                 }
               },
               child: const Text('Save Changes'),

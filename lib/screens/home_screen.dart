@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/screens/add_task_screen.dart';
+import 'package:todo_app/screens/edit_task_screen.dart';
 import 'package:todo_app/widgets/task_item.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,6 +32,33 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // void _editTask(int index, String title) {
+  //   setState(() {
+  //     tasks[index].title = title;
+  //   });
+  // }
+
+  void _editTask(int index) async {
+    if (tasks[index].isCompleted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Completed Task can't be edited")));
+      return;
+    }
+
+    final updatedResult = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EditTaskScreen(
+                  task: tasks[index],
+                )));
+
+    if (updatedResult is String && updatedResult.isNotEmpty) {
+      setState(() {
+        tasks[index].title = updatedResult;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   task: tasks[index],
                   onDelete: () => _deleteTask(index),
                   onToggleComplete: () => _toggleComplete(index),
+                  onEdit: () => _editTask(index),
                 );
               },
             ),
