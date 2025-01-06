@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/screens/add_task_screen.dart';
 import 'package:todo_app/screens/edit_task_screen.dart';
@@ -17,18 +20,21 @@ class _HomeScreenState extends State<HomeScreen> {
   void _addTask(String title) {
     setState(() {
       tasks.add(Task(title: title));
+      saveTasks();
     });
   }
 
   void _deleteTask(int index) {
     setState(() {
       tasks.removeAt(index);
+      saveTasks();
     });
   }
 
   void _toggleComplete(int index) {
     setState(() {
       tasks[index].isCompleted = !tasks[index].isCompleted;
+      saveTasks();
     });
   }
 
@@ -55,6 +61,31 @@ class _HomeScreenState extends State<HomeScreen> {
     if (updatedResult is String && updatedResult.isNotEmpty) {
       setState(() {
         tasks[index].title = updatedResult;
+        saveTasks();
+      });
+    }
+  }
+
+  Future<void> saveTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    final tasksJson = jsonEncode(tasks.map((task) => task.toJson()).toList());
+    await prefs.setString('tasks', tasksJson);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTasks();
+  }
+
+  Future<void> _loadTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    final tasksJson = prefs.getString('tasks');
+    if (tasksJson != null) {
+      final List<dynamic> tasksList = jsonDecode(tasksJson);
+      setState(() {
+        tasks.clear();
+        tasks.addAll(tasksList.map((e) => Task.fromJson(e)).toList());
       });
     }
   }
